@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Blog.Core.Domain.Content
 {
     [Table("Post")]
-    [Index(nameof(Slug),IsUnique = true)]
+    [Index(nameof(Slug), IsUnique = true)]
     public class Post
     {
         [Key]
@@ -34,7 +34,7 @@ namespace Blog.Core.Domain.Content
         [MaxLength(128)]
         public string? Source { get; set; }
         [MaxLength(250)]
-        public string? Tag {  get; set; }
+        public string? Tag { get; set; }
         [MaxLength(160)]
         public string? SepDescription { get; set; }
 
@@ -43,6 +43,8 @@ namespace Blog.Core.Domain.Content
         public DateTime? DateModified { get; set; }
         public bool IsPaid { get; set; }
         public double? RoyaltyAmount { get; set; }
+
+        public PostStatus Status { get; set; }
     }
 
     public enum PostStatus

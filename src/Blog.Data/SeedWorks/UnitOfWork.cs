@@ -1,4 +1,7 @@
-﻿using Blog.Core.SeedWorks;
+﻿using AutoMapper;
+using Blog.Core.Repositories;
+using Blog.Core.SeedWorks;
+using Blog.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +13,14 @@ namespace Blog.Data.SeedWorks
     public class UnitOfWork : IUnitOfWork
     {
         private readonly BlogContext context;
-        public UnitOfWork(BlogContext context)
+        public UnitOfWork(BlogContext context, IMapper mapper)
         {
             this.context = context;
+            Posts = new PostRepository(context, mapper);
         }
+
+        public IPostRepository Posts { get; private set; }
+
         public async Task<int> CompleteAsync()
         {
             return await context.SaveChangesAsync();
