@@ -13,13 +13,17 @@ namespace Blog.Data.SeedWorks
     public class UnitOfWork : IUnitOfWork
     {
         private readonly BlogContext context;
+        public IPostRepository Posts { get; private set; }
+
+        public IPostCategoryRepository PostCategories { get; private set; }
+
         public UnitOfWork(BlogContext context, IMapper mapper)
         {
             this.context = context;
             Posts = new PostRepository(context, mapper);
+            PostCategories = new PostCategoryRepository(context, mapper);
         }
 
-        public IPostRepository Posts { get; private set; }
 
         public async Task<int> CompleteAsync()
         {

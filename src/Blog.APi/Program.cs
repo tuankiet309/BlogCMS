@@ -1,24 +1,29 @@
 using Blog.Api;
+using Blog.Api.Authorization;
 using Blog.Api.Services;
 using Blog.Core.ConfigOptions;
 using Blog.Core.Domain.Identity;
 using Blog.Core.Models.Content;
-using Blog.Core.Repositories;
 using Blog.Core.SeedWorks;
 using Blog.Data;
 using Blog.Data.Repositories;
 using Blog.Data.SeedWorks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 var BlogCorsPolicy = "BlogCorsPolicy";
 var allowedOrigins = builder.Configuration["AllowOrigins"];
-
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler,PermissionAuthorizationHandler>();
 builder.Services.AddCors(o => o.AddPolicy(BlogCorsPolicy, builder =>
 {
     builder.AllowAnyMethod()
@@ -101,6 +106,23 @@ builder.Services.AddSwaggerGen(c =>
     c.ParameterFilter<SwaggerNullableFilter>();
 });
 
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = configuration["JwtTokenSettings:Issuer"],
+        ValidAudience = configuration["JwtTokenSettings:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSettings:Key"]))
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -116,6 +138,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors(BlogCorsPolicy);
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

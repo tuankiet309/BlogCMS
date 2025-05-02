@@ -9,7 +9,8 @@ namespace Blog.Core.SeedWorks
 {
     public interface IUnitOfWork
     {
-        IPostRepository Posts { get; }   
+        IPostRepository Posts { get; } 
+        IPostCategoryRepository PostCategories { get; }
         Task<int> CompleteAsync();
     }
 }

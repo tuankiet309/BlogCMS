@@ -10,7 +10,6 @@ namespace Blog.Core.Models.Content
 
 
 
-
         public Guid CategoryId { get; set; }
 
         public string? Content { get; set; }
