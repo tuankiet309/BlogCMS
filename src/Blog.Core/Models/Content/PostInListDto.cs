@@ -7,23 +7,26 @@ namespace Blog.Core.Models.Content
     public class PostInListDto
     {
         public Guid Id { get; set; }
-        [Required]
-        [MaxLength(250)]
+
         public required string Name { get; set; }
-        [Required]
-        [MaxLength(250)]
+
         public required string Slug { get; set; }
+
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        [MaxLength(500)]
         public string? Thumbnail { get; set; }
-
-
-
-
         public int ViewCount { get; set; }
         public DateTime DateCreated { get; set; }
+        public required string CategorySlug { set; get; }
+
+        public required string CategoryName { set; get; }
+        public string AuthorUserName { set; get; }
+        public string AuthorName { set; get; }
+
+        public PostStatus Status { set; get; }
+
+        public DateTime? PaidDate { get; set; }
 
         public class AutoMapperProfiles : Profile
         {
@@ -32,6 +35,5 @@ namespace Blog.Core.Models.Content
                 CreateMap<Post, PostInListDto>();
             }
         }
-
     }
 }

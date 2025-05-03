@@ -25,5 +25,6 @@ namespace Blog.Core.Domain.Content
         public string? Note { set; get; }
 
         public Guid UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

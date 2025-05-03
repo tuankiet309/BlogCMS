@@ -48,7 +48,34 @@ export const navItems: INavData[] = [
       }
     ],
   },
-
+  {
+    name: 'Nhuận bút',
+    url: '/royalty',
+    iconComponent: { name: 'cil-notes' },
+    children: [
+      {
+        name: 'Thống kê tháng',
+        url: '/royalty/royalty-month',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      },
+      {
+        name: 'Thống kê tác giả',
+        url: '/royalty/royalty-user',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      },
+      {
+        name: 'Thống kê giao dịch',
+        url: '/royalty/transaction',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      }
+    ],
+  },
   {
     name: 'Hệ thống',
     url: '/system',

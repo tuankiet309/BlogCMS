@@ -5,9 +5,11 @@ using Blog.Core.ConfigOptions;
 using Blog.Core.Domain.Identity;
 using Blog.Core.Models.Content;
 using Blog.Core.SeedWorks;
+using Blog.Core.Service;
 using Blog.Data;
 using Blog.Data.Repositories;
 using Blog.Data.SeedWorks;
+using Blog.Data.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -82,10 +84,12 @@ builder.Services.AddAutoMapper(typeof(PostInListDto));
 
 //Authen and Author
 builder.Services.Configure<JwtTokenSettings>(configuration.GetSection("JwtTokenSettings"));
+builder.Services.Configure<MediaSettings>(configuration.GetSection("MediaSettings"));
 builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+builder.Services.AddScoped<IRoyaltyService, RoyaltyService>();
 
 //DefaultConfig
 builder.Services.AddControllers();
@@ -136,6 +140,7 @@ if (app.Environment.IsDevelopment())
         c.DisplayRequestDuration();
     });
 }
+app.UseStaticFiles();
 app.UseCors(BlogCorsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthentication();

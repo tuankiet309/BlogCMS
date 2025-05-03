@@ -23,15 +23,21 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'system',
-        loadChildren: () =>
-          import('./views/system/system.module').then((m) => m.SystemModule),
-      },
-      {
         path: 'content',
         loadChildren: () =>
           import('./views/content/content.module').then((m) => m.ContentModule),
       },
+      {
+        path: 'royalty',
+        loadChildren: () =>
+          import('./views/royalty/royalty.module').then((m) => m.RoyaltyModule),
+      },
+      {
+        path: 'system',
+        loadChildren: () =>
+          import('./views/system/system.module').then((m) => m.SystemModule),
+      },
+      
     ],
   },
   { path: '**', redirectTo: 'dashboard' },
