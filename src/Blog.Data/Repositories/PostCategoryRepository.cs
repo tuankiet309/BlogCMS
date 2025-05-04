@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Blog.Data.Repositories
 {
     public class PostCategoryRepository : RepositoryBase<PostCategory, Guid>, IPostCategoryRepository
@@ -43,6 +44,10 @@ namespace Blog.Data.Repositories
                 RowCount = totalRow,
                 PageSize = pageSize
             };
+        }
+        public async Task<bool> HasPost(Guid categoryId)
+        {
+            return await _context.Posts.AnyAsync(x => x.CategoryId == categoryId);
         }
     }
 }

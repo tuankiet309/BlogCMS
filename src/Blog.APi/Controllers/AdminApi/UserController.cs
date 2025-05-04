@@ -3,27 +3,27 @@ using Blog.Core.Domain.Identity;
 using Blog.Core.Models;
 using Blog.Core.SeedWorks.Constant;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Blog.Core.SeedWorks.Constant.Permissions;
 using Blog.Core.Models.System;
 using Microsoft.EntityFrameworkCore;
 using Blog.Api.Extensions;
+using Blog.Core.SeedWorks;
+using Blog.Core.Repositories;
 
 namespace Blog.Api.Controllers.AdminApi
-{
-    [Route("api/admin/user")]
+{[Route("api/admin/user")]
     public class UserController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-
-        public UserController(UserManager<AppUser> userManager, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        public UserController(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("{id}")]
@@ -196,15 +196,13 @@ namespace Blog.Api.Controllers.AdminApi
                 return NotFound();
             }
             var currentRoles = await _userManager.GetRolesAsync(user);
-            var removedResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _unitOfWork.Users.RemoveUserFromRoles(user.Id, currentRoles.ToArray());
             var addedResult = await _userManager.AddToRolesAsync(user, roles);
-            if (!addedResult.Succeeded || !removedResult.Succeeded)
+            if (!addedResult.Succeeded)
             {
                 List<IdentityError> addedErrorList = addedResult.Errors.ToList();
-                List<IdentityError> removedErrorList = removedResult.Errors.ToList();
                 var errorList = new List<IdentityError>();
                 errorList.AddRange(addedErrorList);
-                errorList.AddRange(removedErrorList);
 
                 return BadRequest(string.Join("<br/>", errorList.Select(x => x.Description)));
             }

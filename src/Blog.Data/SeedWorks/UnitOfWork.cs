@@ -20,6 +20,7 @@ namespace Blog.Data.SeedWorks
         public IPostCategoryRepository PostCategories { get; private set; }
 
         public ISeriesRepository Series { get; private set; }
+        public IUserRepository Users { get; }
 
         public ITransactionRepository Transactions { get; private set; }        
         public UnitOfWork(BlogContext context, IMapper mapper, UserManager<AppUser> userManager)
@@ -28,7 +29,8 @@ namespace Blog.Data.SeedWorks
             Posts = new PostRepository(context, mapper, userManager);
             PostCategories = new PostCategoryRepository(context, mapper);
             Series = new SeriesRepository(context, mapper);
-            Transactions = new TransactionRepository(context, mapper);  
+            Transactions = new TransactionRepository(context, mapper);
+            Users = new UserRepository(context);
         }
 
 

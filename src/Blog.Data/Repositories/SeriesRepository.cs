@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Data.Repositories
 {
-    public class SeriesRepository : RepositoryBase<Series, Guid>, ISeriesRepository
-    {
+    public class SeriesRepository : RepositoryBase<Series, Guid>, ISeriesRepository    {
         private readonly IMapper _mapper;
         public SeriesRepository(BlogContext context, IMapper mapper) : base(context)
         {
@@ -67,6 +66,11 @@ namespace Blog.Data.Repositories
         public async Task<bool> IsPostInSeries(Guid seriesId, Guid postId)
         {
             return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId && x.PostId == postId);
+        }
+
+        public async Task<bool> HasPost(Guid seriesId)
+        {
+            return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId);
         }
 
         public async Task RemovePostToSeries(Guid seriesId, Guid postId)
